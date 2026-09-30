@@ -73,3 +73,17 @@ main > p {
 .boton-voz:active {
   transform: scale(0.98);
 }
+
+.filtros { display: grid; gap: 8px; margin-bottom: 16px; }
+.filtros label { font-weight: bold; }
+select, input, #detener { font: inherit; min-height: 48px; padding: 12px; border: 1px solid #94a3b8; border-radius: 10px; background: white; color: #1f2937; }
+input, select { width: 100%; }
+.ayuda { font-size: 14px; line-height: 1.5; color: #475569; margin-bottom: 24px; }
+.tema { display: grid; gap: 14px; }
+.tema h2 { margin: 12px 0 0; font-size: 22px; color: #1e40af; }
+.frase p { line-height: 1.5; overflow-wrap: anywhere; }
+.controles-voz { display: flex; gap: 8px; }
+.controles-voz .boton-voz { flex: 1; font-size: 16px; padding: 10px; }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+:focus-visible { outline: 3px solid #b45309; outline-offset: 3px; }
+@media (max-width: 360px) { .controles-voz { flex-direction: column; } }

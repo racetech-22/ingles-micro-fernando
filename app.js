@@ -18,19 +18,19 @@ const frases = [
     espanol: "Déjeme llevar su equipaje."
   },
   {
-    categoria: "Salida",
+    categoria: "Subida y seguridad",
     ingles: "Whenever you’re ready, you can get on board.",
     fonetica: "Uenéver yor rédi, yu ken guet on bórd.",
     espanol: "Cuando quieran, pueden subir."
   },
   {
-    categoria: "Destino",
+    categoria: "Destino y recogida",
     ingles: "What hotel are you going to?",
     fonetica: "Uat joutél ar yu góuin tu?",
     espanol: "¿A qué hotel van?"
   },
   {
-    categoria: "Durante el viaje",
+    categoria: "Comodidad",
     ingles: "Is the temperature okay for you?",
     fonetica: "Is de témpricher oukéi for yu?",
     espanol: "¿La temperatura está bien para ustedes?"
@@ -96,49 +96,128 @@ const frases = [
     espanol: "Ha sido un placer llevarles. Que tengan un buen vuelo y un buen viaje de regreso a casa."
   },
   {
-    categoria: "Cortesía",
+    categoria: "Cortesía y comunicación",
     ingles: "Take your time, there’s no rush.",
     fonetica: "Téik yor táim, ders nóu rash.",
     espanol: "Tómense su tiempo, no hay prisa."
   }
 ];
+frases.push(...nuevasFrases);
+const temas = ['Recepción', 'Destino y recogida', 'Equipaje', 'Subida y seguridad',
+  'Durante el viaje', 'Comodidad', 'Hotel', 'Aeropuerto', 'Despedida', 'Cortesía y comunicación'];
+const selector = document.getElementById('tema');
+const buscador = document.getElementById('buscar');
+const estadoVoz = document.getElementById('estado-voz');
+const sintetizador = window.speechSynthesis;
+let vozInglesa;
+// Mantener la referencia evita que algunos navegadores interrumpan la locución.
+let locucion;
+temas.forEach(tema => {
+  const opcion = document.createElement('option');
+  opcion.value = tema;
+  opcion.textContent = tema + ' (' + frases.filter(f => f.categoria === tema).length + ')';
+  selector.appendChild(opcion);
+});
 
-function hablar(texto) {
-  window.speechSynthesis.cancel();
-
-  const voz = new SpeechSynthesisUtterance(texto);
-  voz.lang = "en-GB";
-  voz.rate = 0.85;
-
-  window.speechSynthesis.speak(voz);
+function cargarVoces() {
+  if (!sintetizador || !window.SpeechSynthesisUtterance) {
+    estadoVoz.textContent = 'Este navegador no permite reproducir voz. Prueba con Chrome en tu móvil.';
+    return;
+  }
+  const voces = sintetizador.getVoices();
+  // Preferir inglés británico local para poder usarlo sin conexión.
+  vozInglesa = voces.find(v => v.lang === 'en-GB' && v.localService)
+    || voces.find(v => v.lang === 'en-GB')
+    || voces.find(v => /^en[-_]/i.test(v.lang) && v.localService)
+    || voces.find(v => /^en[-_]/i.test(v.lang));
+  estadoVoz.textContent = vozInglesa
+    ? 'Voz: ' + vozInglesa.name + '. ' + (vozInglesa.localService ? 'Disponible en el dispositivo.' : 'Puede necesitar conexión.')
+    : 'Voz inglesa del dispositivo. Si no se oye, instala una voz inglesa en los ajustes de texto a voz.';
 }
-
+function hablar(texto, lenta = false) {
+  if (!sintetizador || !window.SpeechSynthesisUtterance) return;
+  sintetizador.cancel();
+  cargarVoces();
+  locucion = new SpeechSynthesisUtterance(texto);
+  locucion.lang = vozInglesa ? vozInglesa.lang : 'en-GB';
+  if (vozInglesa) locucion.voice = vozInglesa;
+  locucion.rate = lenta ? 0.65 : 0.85;
+  locucion.onerror = event => {
+    if (!['canceled', 'interrupted'].includes(event.error)) {
+      estadoVoz.textContent = 'No se pudo reproducir. Comprueba el volumen y la voz inglesa del dispositivo.';
+    }
+  };
+  sintetizador.speak(locucion);
+}
+// Buscar en ambos idiomas sin distinguir mayúsculas ni tildes.
+function normalizar(texto) {
+  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
 function mostrarFrases() {
-  const contenedor = document.getElementById("frases");
-
-  frases.forEach((frase) => {
-    const tarjeta = document.createElement("section");
-    tarjeta.className = "frase";
-
-    tarjeta.innerHTML = `
-      <p class="frase-ingles">${frase.ingles}</p>
-      <p class="frase-fonetica">${frase.fonetica}</p>
-      <p class="frase-espanol">${frase.espanol}</p>
-      <button class="boton-voz">🔊 Escuchar</button>
-    `;
-
-    tarjeta.querySelector(".boton-voz").addEventListener("click", () => {
-      hablar(frase.ingles);
+  const contenedor = document.getElementById('frases');
+  const consulta = normalizar(buscador.value.trim());
+  const visibles = frases.filter(f => (!selector.value || f.categoria === selector.value)
+    && normalizar(f.ingles + ' ' + f.espanol + ' ' + f.categoria).includes(consulta));
+  contenedor.replaceChildren();
+  document.getElementById('resultado').textContent = visibles.length + ' de ' + frases.length + ' frases';
+  temas.forEach(tema => {
+    const grupo = visibles.filter(f => f.categoria === tema);
+    if (!grupo.length) return;
+    const seccion = document.createElement('section');
+    seccion.className = 'tema';
+    const titulo = document.createElement('h2');
+    titulo.textContent = tema + ' · ' + grupo.length;
+    seccion.appendChild(titulo);
+    grupo.forEach(frase => {
+      const tarjeta = document.createElement('article');
+      tarjeta.className = 'frase';
+      [['ingles', 'en-GB'], ['fonetica', 'es'], ['espanol', 'es']].forEach(([campo, idioma]) => {
+        const texto = document.createElement('p');
+        texto.className = 'frase-' + campo;
+        texto.lang = idioma;
+        texto.textContent = frase[campo];
+        tarjeta.appendChild(texto);
+      });
+      const controles = document.createElement('div');
+      controles.className = 'controles-voz';
+      [false, true].forEach(lenta => {
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'boton-voz';
+        boton.textContent = lenta ? '🐢 Más despacio' : '🔊 Escuchar';
+        boton.setAttribute('aria-label', (lenta ? 'Escuchar despacio: ' : 'Escuchar: ') + frase.ingles);
+        boton.disabled = !sintetizador || !window.SpeechSynthesisUtterance;
+        boton.addEventListener('click', () => hablar(frase.ingles, lenta));
+        controles.appendChild(boton);
+      });
+      tarjeta.appendChild(controles);
+      seccion.appendChild(tarjeta);
     });
-
-    contenedor.appendChild(tarjeta);
+    contenedor.appendChild(seccion);
   });
+  if (!visibles.length) {
+    const mensaje = document.createElement('p');
+    mensaje.textContent = 'No hay frases que coincidan. Prueba otro tema o palabra.';
+    contenedor.appendChild(mensaje);
+  }
 }
-
+selector.addEventListener('change', mostrarFrases);
+buscador.addEventListener('input', mostrarFrases);
+document.getElementById('detener').addEventListener('click', () => sintetizador?.cancel());
+if (sintetizador) sintetizador.addEventListener('voiceschanged', cargarVoces);
+cargarVoces();
 mostrarFrases();
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js");
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {
+      document.getElementById('estado-app').textContent = 'No se pudo activar el acceso sin conexión. Recarga con conexión.';
+    });
+  });
+  // Actualizar la PWA instalada una sola vez cuando cambia su versión.
+  let recargando = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (recargando) return;
+    recargando = true;
+    window.location.reload();
   });
 }

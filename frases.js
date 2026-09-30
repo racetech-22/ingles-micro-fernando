@@ -1,0 +1,32 @@
+// Cada entrada conserva inglés, pronunciación aproximada y traducción.
+// La voz se genera a partir del inglés completo, sin mantener audios separados.
+const nuevasFrases = [
+  ['Recepción', 'Good afternoon! Welcome aboard.', 'Gud aftanún! Uélcom abórd.', 'Buenas tardes. Bienvenidos a bordo.'],
+  ['Recepción', 'How many people are travelling with you?', 'Jáu méni pípol ar trávelin uid yu?', '¿Cuántas personas viajan con ustedes?'],
+  ['Destino y recogida', 'May I see your booking confirmation, please?', 'Méi ai sí yor búkin confirméishon, plíis?', '¿Me permite ver la confirmación de su reserva?'],
+  ['Destino y recogida', 'Could you tell me the name of your hotel, please?', 'Kud yu tel mí de néim ov yor joutél, plíis?', '¿Podrían decirme el nombre de su hotel?'],
+  ['Destino y recogida', 'Please wait here. I’ll be back in a moment.', 'Plíis uéit jíar. Ail bi bak in a móument.', 'Esperen aquí, por favor. Vuelvo en un momento.'],
+  ['Destino y recogida', 'We’re waiting for a few more passengers. Thank you for your patience.', 'Uía uéitin for a fiú mor pásenyers. Zank yu for yor péishens.', 'Estamos esperando a algunos pasajeros más. Gracias por su paciencia.'],
+  ['Equipaje', 'Please leave your luggage here. I will take care of it. Please get on the bus and take a seat.', 'Plíis líiv yor láguich jíar. Ai uil téik kér ov it. Plíis guet on de bas and téik a sít.', 'Dejen aquí el equipaje. Yo me encargo. Suban al microbús y tomen asiento, por favor.'],
+  ['Equipaje', 'Is this your suitcase?', 'Is dis yor sútkeis?', '¿Esta es su maleta?'],
+  ['Equipaje', 'Do you have any other bags?', 'Du yu jav éni áder bags?', '¿Tienen alguna otra bolsa o maleta?'],
+  ['Equipaje', 'Please keep your hand luggage with you.', 'Plíis kíip yor jand láguich uid yu.', 'Conserven con ustedes el equipaje de mano, por favor.'],
+  ['Subida y seguridad', 'Please fasten your seat belt.', 'Plíis fásen yor sít belt.', 'Abróchense el cinturón, por favor.'],
+  ['Subida y seguridad', 'Mind the step, please.', 'Máind de step, plíis.', 'Cuidado con el escalón, por favor.'],
+  ['Subida y seguridad', 'Please stay seated until we stop.', 'Plíis stéi sítid antíl ui stop.', 'Permanezcan sentados hasta que paremos, por favor.'],
+  ['Durante el viaje', 'The journey takes about forty minutes.', 'De yérni téiks abáut fórti mínits.', 'El trayecto dura unos cuarenta minutos.'],
+  ['Durante el viaje', 'We have a few hotel stops along the way.', 'Ui jav a fiú joutél stops alóng de uéi.', 'Haremos algunas paradas en hoteles durante el trayecto.'],
+  ['Durante el viaje', 'There’s some traffic, so we may be a little late.', 'Ders sam tráfik, sou ui méi bi a lítol léit.', 'Hay algo de tráfico, así que puede que lleguemos un poco tarde.'],
+  ['Comodidad', 'Would you like the air conditioning a little cooler?', 'Wud yu láik di ér condíshonin a lítol kúler?', '¿Les gustaría que bajara un poco la temperatura del aire acondicionado?'],
+  ['Comodidad', 'Would you like me to turn the air conditioning down?', 'Wud yu láik mí tu tern di ér condíshonin dáun?', '¿Quieren que reduzca el aire acondicionado?'],
+  ['Comodidad', 'Are you comfortable?', 'Ar yu kámftabol?', '¿Están cómodos?'],
+  ['Hotel', 'We’re nearly at your hotel.', 'Uía níali at yor joutél.', 'Ya estamos cerca de su hotel.'],
+  ['Hotel', 'The hotel entrance is just over there.', 'De joutél éntrans is yast óuver der.', 'La entrada del hotel está justo allí.'],
+  ['Hotel', 'Please wait until I open the luggage compartment.', 'Plíis uéit antíl ai óupen de láguich compártment.', 'Esperen a que abra el maletero, por favor.'],
+  ['Aeropuerto', 'We’ve arrived at the airport. Please check that you have your passport and hand luggage.', 'Uiv arráivd at di érport. Plíis chek dat yu jav yor pásport and jand láguich.', 'Hemos llegado al aeropuerto. Comprueben que llevan el pasaporte y el equipaje de mano.'],
+  ['Aeropuerto', 'Please check the screens for your check-in desk.', 'Plíis chek de skríns for yor chékin desk.', 'Consulten en las pantallas su mostrador de facturación.'],
+  ['Cortesía y comunicación', 'Could you say that again, a little more slowly, please?', 'Kud yu séi dat aguén, a lítol mor slóuli, plíis?', '¿Podría repetirlo un poco más despacio, por favor?'],
+  ['Cortesía y comunicación', 'My English is still a work in progress. Thank you for your patience!', 'Mai ínglish is stil a uerk in próugres. Zank yu for yor péishens!', '¡Todavía estoy mejorando mi inglés! Gracias por su paciencia.'],
+  ['Cortesía y comunicación', 'You’re very welcome. It’s my pleasure.', 'Yor véri uélcom. Its mai pléshur.', 'No hay de qué. Es un placer.'],
+  ['Despedida', 'Thank you for travelling with us. I hope to see you again!', 'Zank yu for trávelin uid as. Ai jóup tu sí yu aguén!', 'Gracias por viajar con nosotros. ¡Espero volver a verles!']
+].map(([categoria, ingles, fonetica, espanol]) => ({categoria, ingles, fonetica, espanol}));

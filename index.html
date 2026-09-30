@@ -3,25 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Inglés Micro - Fernando</title>
-
-  <meta name="theme-color" content="#ffffff">
-
+  <meta name="theme-color" content="#1d4ed8">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
   <main>
     <h1>Inglés Micro</h1>
     <p>Frases útiles para pasajeros</p>
-
+    <div class="filtros">
+      <label for="tema">Tema</label>
+      <select id="tema"><option value="">Todos los temas</option></select>
+      <label for="buscar">Buscar en español o inglés</label>
+      <input id="buscar" type="search" placeholder="Maleta, hotel, temperatura…">
+    </div>
+    <p id="resultado" role="status" aria-live="polite"></p>
+    <aside class="ayuda">
+      <p>Fonética aproximada para hispanohablantes. Escucha la voz para practicar.</p>
+      <p id="estado-voz" role="status"></p>
+      <button id="detener" type="button">⏹ Detener voz</button>
+      <p id="estado-app">Versión 2 · Las frases están disponibles sin conexión tras la primera carga. La voz depende de las voces instaladas en tu dispositivo.</p>
+    </aside>
     <div id="frases"></div>
+    <noscript>Activa JavaScript para consultar y escuchar las frases.</noscript>
   </main>
-
+  <script src="frases.js"></script>
   <script src="app.js"></script>
-
 </body>
 </html>
