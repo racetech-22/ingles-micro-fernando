@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f7fb;
+  color: #1f2937;
+}
+
+main {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+h1 {
+  margin-bottom: 4px;
+  font-size: 32px;
+  text-align: center;
+}
+
+main > p {
+  margin-top: 0;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #64748b;
+}
+
+#frases {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.frase {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.frase-ingles {
+  margin: 0 0 10px;
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.frase-fonetica {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: #2563eb;
+}
+
+.frase-espanol {
+  margin: 0 0 16px;
+  color: #475569;
+}
+
+.boton-voz {
+  width: 100%;
+  min-height: 54px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #1d4ed8;
+  color: white;
+}
+
+.boton-voz:active {
+  transform: scale(0.98);
+}
